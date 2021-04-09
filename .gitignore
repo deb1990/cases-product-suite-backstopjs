@@ -1,0 +1,8 @@
+.DS_Store
+node_modules/
+cookies
+screenshots
+*_report
+backstop.temp.json
+site-config.json
+sample.txt
