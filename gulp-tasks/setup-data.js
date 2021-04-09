@@ -12,6 +12,8 @@ const customGroupService = require('./data-setup-steps/custom-group.service.js')
 const customFieldService = require('./data-setup-steps/custom-field.service.js');
 const createSampleUploadFile = require('./data-setup-steps/create-sample-upload-file.service.js');
 
+const CONFIGS = require('././utils/configs.js');
+
 module.exports = setupData;
 
 /**
@@ -20,6 +22,8 @@ module.exports = setupData;
  * @returns {Promise} An empty promise that is resolved when the task is done.
  */
 async function setupData () {
+  CONFIGS.touchSiteConfigFile();
+
   createSampleUploadFile();
 
   relationshipTypeService.setupData();

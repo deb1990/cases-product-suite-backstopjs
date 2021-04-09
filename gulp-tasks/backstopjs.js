@@ -9,17 +9,16 @@ var _ = require('lodash');
 var argv = require('yargs').argv;
 var backstopjs = require('backstopjs');
 var clean = require('gulp-clean');
-var colors = require('ansi-colors');
 var execSync = require('child_process').execSync;
 var file = require('gulp-file');
 var fs = require('fs');
 var gulp = require('gulp');
 var path = require('path');
-var PluginError = require('plugin-error');
 var puppeteer = require('puppeteer');
 
 const CONFIGS = require('././utils/configs.js');
 const replaceUrlVars = require('././utils/replace-url-vars.js');
+const throwError = require('././utils/throw-error.js');
 
 var LOGGED_IN_USER_NAME = 'admin';
 
@@ -103,13 +102,7 @@ function createTempConfig () {
  * @returns {Promise} for the backstop task
  */
 function runBackstopJS (command) {
-  if (touchSiteConfigFile()) {
-    throwError(
-      'No site-config.json file detected!\n' +
-      '\tOne has been created for you \n' +
-      '\tPlease insert the real value for each placeholder and try again'
-    );
-  }
+  CONFIGS.touchSiteConfigFile();
 
   return new Promise((resolve, reject) => {
     let success = false;
@@ -134,39 +127,6 @@ function runBackstopJS (command) {
     .catch(function (err) {
       throwError(err.message);
     });
-}
-
-/**
- * Creates the site config file is in the backstopjs folder, if it doesn't exists yet
- *
- * @returns {boolean} Whether the file had to be created or not
- */
-function touchSiteConfigFile () {
-  let created = false;
-
-  try {
-    fs.readFileSync(CONFIGS.FILES.siteConfig);
-  } catch (err) {
-    fs.copyFileSync(CONFIGS.FILES.siteConfigSample, CONFIGS.FILES.siteConfig);
-
-    created = true;
-  }
-
-  return created;
-}
-
-/**
- * A simple wrapper for displaying errors
- * It converts the tab character to the amount of spaces required to correctly
- * align a multi-line block of text horizontally
- *
- * @param {string} msg to be displayed
- * @throws {Error} of the plugin
- */
-function throwError (msg) {
-  throw new PluginError('Error', {
-    message: colors.red(msg.replace(/\t/g, '    '))
-  });
 }
 
 /**
