@@ -79,7 +79,7 @@ jobs:
 
       - name: Install BackstopJS
         run: |
-          git clone https://github.com/compucorp/cases-product-suite-backstopjs.git --depth 1
+          git clone https://github.com/compucorp/cases-product-suite-backstopjs.git --branch CPS-544-move-backstopjs
           cd ${{ env.BACKSTOP_DIR }}
           [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
           nvm install
